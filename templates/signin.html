@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>PSW Manager</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Sing In</h1>
+        <form class="form-group half" action="/signin" method="POST">
+            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <p>Username : </p>
+            <input type="text" name="username" id="username">
+            <p>Password : </p>
+            <input type="password" name="password" id="password">
+            <br></br>
+            <input class="btn green" value='Sing In' type='submit'>
+        </form>
+
+        <form class="form-group half" action="/" method="GET">
+            <input class="btn red" value='Cancel' type='submit'>
+        </form>
+
+        <div id="password-info">
+            <p>Password criteria:<br>
+            - Minimum length of 8 characters.<br>
+            - Must include both uppercase and lowercase letters.<br>
+            - Must include at least one digit.<br>
+            - Must include at least one special character.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul id="messages" class=flash-messages>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        {% block body %}{% endblock %}
+
+    </div>
+</body>
+<script>
+    let elem = document.getElementById('messages')
+    if (elem != null) {
+        setTimeout(function(){
+            elem.remove()
+        }, 5000);
+    }
+</script>
+</html>

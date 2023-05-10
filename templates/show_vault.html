@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>PSW Manager</title>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+            <h1>Current vault: {{ vault_name }}</h1>
+        {% endblock %}
+
+        <form id="vaultItems" class="vault-form-group" method="POST" action="/update_vault/{{ vault_name }}">
+            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <div id="items">
+            </div>
+            
+            <br>
+
+            <div class="full-row">
+                <input class="btn green right wide-btn" value='Save changes' type='submit'>
+            </div>
+
+        </form>
+
+        <div class="full-row">
+            <button onclick="openPopup()" id="addItem" class="btn blue right wide-btn">Add Item</button>
+        </div>
+
+        <form class="form-group full-row" action="/remove_vault/{{ vault_name }}" method="POST">
+            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input class="btn red wide-btn" value='Remove vault' type='submit'>
+        </form>
+
+        <div class="overlay" onclick="closePopup()"></div>
+
+        <form class="form-group full-row" action="/vaults" method="GET">
+            <input class="btn red wide-btn" value='Cancel' type='submit'>
+        </form>
+
+        <div id="password-info">
+            <p>Password criteria:<br>
+            - Minimum length of 8 characters.<br>
+            - Must include both uppercase and lowercase letters.<br>
+            - Must include at least one digit.<br>
+            - Must include at least one special character.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul id="messages" class=flash-messages>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}
+    </div>
+
+    <template id="popupTemplate">
+        <div class="popup form-group">
+          <h2>Enter item name</h2>
+          <input type="text" id="nameInput">
+          <br></br>
+          <button class="btn green" onclick="submitName()">Submit</button>
+        </div>
+    </template>
+
+    <template id="itemTemplate">
+        <div class="vaultItemDiv">
+            <label for="Name">Item name : </label>
+            <label for="Password">Password value : </label>
+            <input class="itemNameInput" type="text" name="Name" id="name_">
+            <input class="pswInput" type="password" name="Password" id="Password_">
+            <i class="bi bi-eye-slash" id="togglePassword"></i>
+            <i class="material-icons">delete_forever</i>
+        </div>
+    </template>
+
+</body>
+<script>
+
+    {% if vault_items != {} %}
+        var vault_items = {{ vault_items | tojson}}
+        console.log(vault_items)
+        for (var key in vault_items) {
+            createItemElements(key, vault_items[key])
+        }
+    {% else %}
+        let h3 = document.createElement("h3")
+        h3.id = "noItems"
+        h3.textContent = "No items"
+        document.getElementById("items").appendChild(h3)
+    {% endif %}
+
+    var elem = document.getElementById('messages')
+    if (elem != null) {
+        setTimeout(function(){
+            elem.remove()
+        }, 5000);
+    }
+
+    function openPopup() {
+        var popupTemplate = document.getElementById('popupTemplate');
+        var popupContent = popupTemplate.content.children[0].cloneNode(true);
+        document.body.appendChild(popupContent);
+        popupContent.style.display = "block";
+
+        var overlay = document.querySelector('.overlay');
+        overlay.style.display = 'block';
+    }
+
+    function closePopup() {
+        var popup = document.querySelector('.popup');
+        var overlay = document.querySelector('.overlay');
+        popup.parentNode.removeChild(popup);
+        overlay.style.display = 'none';
+    }
+
+    function submitName() {
+        var nameInput = document.getElementById('nameInput');
+        var name = nameInput.value;
+        var noItemsElem = document.getElementById("noItems")
+        if (noItemsElem != null) {
+            noItemsElem.remove()
+        }
+
+        if (document.getElementById("Password_"+name) != null) {
+            let message = "Item named '" + name + "' already exists!"
+            createMessage(message, "error")
+        } else {
+            createItemElements(name, "")
+        }
+        
+        closePopup();
+    }
+
+    function createItemElements(name, value_) {
+        var itemTemplate = document.getElementById('itemTemplate');
+        var itemContentDiv = itemTemplate.content.children[0].cloneNode(true);
+
+        var nameElement = itemContentDiv.children[2];
+        var PasswordElement = itemContentDiv.children[3];
+        var togglePassword = itemContentDiv.children[4];
+        var deleteItem = itemContentDiv.children[5];
+
+        togglePassword.id += name;
+        nameElement.id += name;
+        PasswordElement.id += name;
+        nameElement.value = name;
+        PasswordElement.value = value_;
+
+        togglePassword.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = PasswordElement.getAttribute("type") === "password" ? "text" : "password";
+            PasswordElement.setAttribute("type", type);
+            
+            // toggle the icon
+            this.classList.toggle("bi-eye");
+        });
+
+        nameElement.oldvalue = name;
+
+        nameElement.addEventListener("change", function (e) {
+            console.log("asda")
+            let nameInputs = document.getElementsByClassName("itemNameInput")
+            let isValidName = true
+            if (nameElement.value == "") {
+                createMessage(
+                    "Item name cannot be empty! Name changed back to '" + nameElement.oldvalue +"'", 
+                    "error"
+                    )
+                nameElement.value = nameElement.oldvalue
+                isValidName = false
+            } else {
+                for (i of nameInputs) {
+                    console.log(i.value + "==" + nameElement.value)
+                    if (i.value == nameElement.value) {
+                        createMessage(
+                            "Item with this name already exists! Name changed back to '" + nameElement.oldvalue +"'", 
+                            "error"
+                            )
+                        nameElement.value = nameElement.oldvalue
+                        isValidName = false
+                        break
+                    }
+            }
+            }
+
+            if (isValidName == true) {
+                nameElement.oldvalue = nameElement.value
+            }
+        })
+
+        deleteItem.addEventListener("click", function() {
+            itemContentDiv.remove()
+        })
+
+        document.getElementById("items").appendChild(itemContentDiv)
+    }
+
+    function createMessage(message, type) {
+        let container = document.getElementsByClassName("container")[0]
+        let ul = document.createElement("ul")
+        ul.id = "messages"
+        ul.classList.add("flash-messages")
+        let li = document.createElement("li")
+        li.classList.add(type)
+        li.textContent = message
+        ul.append(li)
+        container.appendChild(ul)
+        setTimeout(function(){
+            ul.remove()
+        }, 5000);
+    }
+</script>
+</html>

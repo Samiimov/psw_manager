@@ -1,0 +1,227 @@
+/* Global Styles */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1f1f1;
+  }
+
+br {
+  height: 10px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Form Styles */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 96.5%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Show Vault style */
+.vault-form-group label {
+  display: inline-block;
+  width: 48%;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+}
+
+.vault-form-group input[type="text"],
+.vault-form-group input[type="password"] {
+  display: inline-block;
+  width: 44%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.vaultItemDiv {
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 0px 10px 10px 10px;
+}
+
+.vault-form-group i {
+  margin-left: -30px;
+  cursor: pointer;
+}
+
+.vault-form-group i:last-of-type {
+  margin-left: 7px;
+  cursor: pointer;
+  color: #ff4242;
+  font-size: 36px;
+  position: absolute;
+}
+
+/* Vault List Styles */
+
+.vault-list {
+  margin-bottom: 20px;
+}
+
+.vault-list a {
+  width: 97%;
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: #92ceff;
+  font-weight: bold;
+  border: 2px solid transparent;
+}
+
+.vault-list a:visited {
+  text-decoration: none;
+}
+
+.vault-list a:hover {
+  border: 2px solid #333333;
+  box-shadow: 0 6px 9px rgba(0, 0, 0, 0.1);
+  color: #5eb7ff;
+}
+
+.vault-list a:last-child {
+  margin-bottom: 0;
+}
+
+/* Button Styles */
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  background-color: #fde5e5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  border: 2px solid #333333;
+  box-shadow: 0 6px 9px rgba(0, 0, 0, 0.1);
+}
+
+.half {
+  display: inline;
+  width: 49%;
+}
+
+
+/* Flash messages */
+
+.flash-messages {
+  display: block;
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flash-messages li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.flash-messages li.success {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+
+.flash-messages li.error {
+  background-color: #f2dede;
+  color: #a94442;
+}
+
+.flash-messages li.info {
+  background-color: #d9edf7;
+  color: #31708f;
+}
+
+.flash-messages li.warning {
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+}
+
+/* Styling for the popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+}
+/* Styling for the overlay */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Some classes for colors/sizes */ 
+.green {
+  background-color: #ccffc9;
+}
+
+.red {
+  background-color: #fde5e5;
+  float: right;
+}
+
+.blue {
+  background-color: #92ceff;
+}
+
+.right {
+  float: right;
+}
+
+.full-row {
+  width: 100%;
+  height: 50px;
+}
+
+.wide-btn {
+  width: 140px;
+}

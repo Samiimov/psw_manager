@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>PSW Manager</title>
+</head>
+<body>
+    <div class="container">
+        <form class="form-group" action="create_vault" method="POST">
+            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <label for="Name">Vault name : </p>
+            <input type="text" name="Name" id="vault_name">
+            <br></br>
+            <input class="btn green" value='Submit' type='submit'>
+        </form>
+
+        <form class="form-group half" action="/vaults" method="GET">
+            <input class="btn red" value='Cancel' type='submit'>
+        </form>
+        
+        <br></br>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul id="messages" class=flash-messages>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block body %}{% endblock %}
+    </div>
+</body>
+<script>
+    let elem = document.getElementById('messages')
+    if (elem != null) {
+        setTimeout(function(){
+            elem.remove()
+        }, 5000);
+    }
+</script>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>PSW Manager</title>
+</head>
+<body>
+    <div class="container">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul id="messages" class=flash-messages>
+                {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <h1>Vaults:</h1>
+        <div class="vault-list">
+        </div>
+
+        <form class="form-group half" action="/create_vault" method="GET">
+            <input class="btn green" value='Create Vault' type='submit'>
+        </form>
+
+        <form class="form-group half" action="/logout" method="POST">
+            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input class="btn red" value='Log Out' type='submit'>
+        </form>
+        <br></br>
+        
+    </div>
+</body>
+<script>
+    let elem = document.getElementById('messages')
+    if (elem != null) {
+        setTimeout(function(){
+            elem.remove()
+        }, 5000);
+    }
+
+    let vaultsDiv = document.getElementsByClassName("vault-list")[0]
+    {% if vaults != [] %}
+        var vaults = {{ vaults | tojson }}
+        for (i of vaults) {
+            let a = document.createElement("a")
+            a.href = "/vaults/" + i
+            a.textContent = i
+            vaultsDiv.append(a)
+        }
+    {% else %}
+        let h3 = document.createElement("h3")
+        h3.textContent = "No vaults"
+        vaultsDiv.append(h3)
+    {% endif %}
+</script>
+</html>
