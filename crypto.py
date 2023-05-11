@@ -5,10 +5,14 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
+from cryptography.fernet import Fernet
 
 BS = 16
 
 class CryptoFunctionalities:
+
+    def __init__(self) -> None:
+        self.logging_cipher : Fernet = None
 
     def encrypt(self, key: bytes, data: str) -> bytes:
         iv = os.urandom(16)
@@ -79,5 +83,14 @@ class CryptoFunctionalities:
         digest.update(to_hash)
         digested = digest.finalize()
         return digested
+    
+    def encrypted_formatter(self, record):
+        encrypted = self.logging_cipher.encrypt(record["message"].encode("utf8"))
+        record["extra"]["encrypted"] = base64.b64encode(encrypted).decode("latin1")
+        return "{extra[encrypted]}\n{exception}"
+
+    def set_logging_cipher(self, key: str):
+        key_bytes = base64.b64encode(key.encode())
+        self.logging_cipher = Fernet(key_bytes)
 
 crypto = CryptoFunctionalities()
