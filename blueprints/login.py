@@ -62,7 +62,7 @@ def login_post():
             decrypted_vault = crypto.decrypt(key, encrypted_vault["vault"])
 
             # Add session details
-            # Session is encrypted and client-side
+            # Session is encrypted and server-side
             session["name"] = hash_username
             session["plaintxt_name"] = username
             session["vault"] = json.loads(decrypted_vault)
