@@ -10,7 +10,6 @@ from cryptography.fernet import Fernet
 BS = 16
 
 class CryptoFunctionalities:
-
     def __init__(self) -> None:
         self.logging_cipher : Fernet = None
 
@@ -86,7 +85,7 @@ class CryptoFunctionalities:
     
     def encrypted_formatter(self, record):
         encrypted = self.logging_cipher.encrypt(record["message"].encode("utf8"))
-        record["extra"]["encrypted"] = base64.b64encode(encrypted).decode("latin1")
+        record["extra"]["encrypted"] = base64.b64encode(encrypted).decode()
         return "{extra[encrypted]}\n{exception}"
 
     def set_logging_cipher(self, key: str):

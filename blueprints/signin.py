@@ -1,13 +1,18 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash
-from mongo import mongo
-from crypto import crypto
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
+from utils.mongo import mongo
+from utils.crypto import crypto
 from loguru import logger
-import psw_validation
+import utils.psw_validation as psw_validation
 import json
 import os
+import requests
 
 signin = Blueprint('signin', __name__,
         template_folder='templates')
+
+RECAPTCHA_VERIFY_URL = os.getenv("RECAPTCHA_VERIFY_URL")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
 
 @signin.route("/signin", methods=["GET"])
 def signin_get():
@@ -15,7 +20,7 @@ def signin_get():
     Render Sign In page
     """
     if not session.get("name"):
-        return render_template("signin.html")
+        return render_template("signin.html", site_key=RECAPTCHA_SITE_KEY)
     else:
         return redirect(url_for("vaults.vaults_get"))
 
@@ -24,6 +29,19 @@ def signin_post():
     """
     Handle POST methods for sign ins.
     """
+    # Verify captcha
+    secret_response = request.form["g-recaptcha-response"]
+    verify_response = requests.post(
+        url=f"{RECAPTCHA_VERIFY_URL}?secret={RECAPTCHA_SECRET_KEY}&response={secret_response}").json()
+    # Check success and score 
+    # 0.5 threshold is default recommended in reCaptcha docs
+    if verify_response["success"] == False:
+        logger.error("Unable to verify recaptcha!")
+        abort(401)
+    elif verify_response["score"] < 0.5:
+        logger.error("ReCaptcha score is under 0.5!")
+        abort(401)
+
     credentials = request.form.to_dict(flat=False)
     username = credentials["username"][0]
     password = credentials["password"][0]

@@ -1,34 +1,53 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash
-from mongo import mongo
-from crypto import crypto
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
+from utils.mongo import mongo
+from utils.crypto import crypto
 from loguru import logger
 import json
+import requests
+import os
 
 login = Blueprint('login', __name__,
         template_folder='templates')
 
+RECAPTCHA_VERIFY_URL = os.getenv("RECAPTCHA_VERIFY_URL")
+RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
+RECAPTCHA_SITE_KEY = os.getenv("RECAPTCHA_SITE_KEY")
+
 @login.route("/login", methods=["GET"])
 def login_get():
     if not session.get("name"):
-        return render_template("login.html")
+        return render_template("login.html", site_key = RECAPTCHA_SITE_KEY)
     else:
         return redirect(url_for("vaults.vaults_get"))
 
 @login.route("/login", methods=["POST"])
 def login_post():
-    multidict = request.form
-    credentials = multidict.to_dict(flat=False)
+
+    # Verify captcha
+    secret_response = request.form["g-recaptcha-response"]
+    verify_response = requests.post(
+        url=f"{RECAPTCHA_VERIFY_URL}?secret={RECAPTCHA_SECRET_KEY}&response={secret_response}").json()
+    # Check success and score 
+    # 0.5 threshold is default recommended in reCaptcha docs
+    if verify_response["success"] == False:
+        logger.error("Unable to verify recaptcha!")
+        abort(401)
+    elif verify_response["score"] < 0.5:
+        logger.error("ReCaptcha score is under 0.5!")
+        abort(401)
+    
+    credentials = request.form.to_dict(flat=False)
     username = credentials["username"][0]
     hash_username = crypto.hash_str(username)
     password = credentials["password"][0]
-    logger.info(f"User '{username} tries to log in!'")
+    logger.info(f"User '{username}' tries to log in!'")
     # Check if username existss
     logger.info(f"Fetching username '{username}' from mongo")
     creds, reason = mongo.get_credentials(hash_username)
     if not creds:
         if reason == "":
             # Username doesn't exist
-            logger.info(f"User '{username} doesn't exit!'")
+            logger.info(f"User '{username}' doesn't exit!'")
             flash("Given username doesn't exist!", "error")
         else:
             # Mongo error

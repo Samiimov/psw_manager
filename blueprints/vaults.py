@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, session, url_for, flash
-from mongo import mongo
-from crypto import crypto
-import psw_validation
+from utils.mongo import mongo
+from utils.crypto import crypto
+import utils.psw_validation as psw_validation
 import json
 import copy
 from loguru import logger
