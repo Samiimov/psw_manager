@@ -18,12 +18,12 @@ SALTS_COLLECTION = "salts"
 
 class MongoMethods:
 
-    def __init__(self) -> False:
-        self.conn : pymongo.MongoClient = False
-        self.psw_manager_database = False
-        self.credentials_collection = False
-        self.vaults_collection = False
-        self.salts_collection = False
+    def __init__(self):
+        self.conn : pymongo.MongoClient = None
+        self.psw_manager_database = None
+        self.credentials_collection = None
+        self.vaults_collection = None
+        self.salts_collection = None
 
     def create_connection(self) -> pymongo.MongoClient:
         """

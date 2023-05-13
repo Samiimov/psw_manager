@@ -30,7 +30,7 @@
         </form>
 
         <form class="form-group half" action="/logout" method="POST">
-            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input id="csrf-token" type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
             <input class="btn red" value='Log Out' type='submit'>
         </form>
         <br></br>

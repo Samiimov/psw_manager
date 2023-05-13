@@ -11,7 +11,7 @@
 <body>
     <div class="container">
         <form class="form-group" action="create_vault" method="POST">
-            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input id="csrf-token" type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
             <label for="Name">Vault name : </p>
             <input type="text" name="Name" id="vault_name">
             <br></br>

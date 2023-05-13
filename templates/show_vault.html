@@ -17,7 +17,7 @@
         {% endblock %}
 
         <form id="vaultItems" class="vault-form-group" method="POST" action="/update_vault/{{ vault_name }}">
-            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input id="csrf-token" type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
             <div id="items">
             </div>
             
@@ -34,7 +34,7 @@
         </div>
 
         <form class="form-group full-row" action="/remove_vault/{{ vault_name }}" method="POST">
-            <input type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
+            <input id="csrf-token" type="hidden" name="csrf_token" value = "{{ csrf_token() }}" /> 
             <input class="btn red wide-btn" value='Remove vault' type='submit'>
         </form>
 

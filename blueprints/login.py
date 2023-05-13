@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort
+from flask import Blueprint, redirect, render_template, request, session, url_for, flash, abort, current_app
 from utils.mongo import mongo
 from utils.crypto import crypto
 from loguru import logger
@@ -22,19 +22,20 @@ def login_get():
 
 @login.route("/login", methods=["POST"])
 def login_post():
-
-    # Verify captcha
-    secret_response = request.form["g-recaptcha-response"]
-    verify_response = requests.post(
-        url=f"{RECAPTCHA_VERIFY_URL}?secret={RECAPTCHA_SECRET_KEY}&response={secret_response}").json()
-    # Check success and score 
-    # 0.5 threshold is default recommended in reCaptcha docs
-    if verify_response["success"] == False:
-        logger.error("Unable to verify recaptcha!")
-        abort(401)
-    elif verify_response["score"] < 0.5:
-        logger.error("ReCaptcha score is under 0.5!")
-        abort(401)
+    # Capthca is disabled whent testing
+    if not current_app.config["TESTING"]:
+        # Verify captcha
+        secret_response = request.form["g-recaptcha-response"]
+        verify_response = requests.post(
+            url=f"{RECAPTCHA_VERIFY_URL}?secret={RECAPTCHA_SECRET_KEY}&response={secret_response}").json()
+        # Check success and score 
+        # 0.5 threshold is default recommended in reCaptcha docs
+        if verify_response["success"] == False:
+            logger.error("Unable to verify recaptcha!")
+            abort(401)
+        elif verify_response["score"] < 0.5:
+            logger.error("ReCaptcha score is under 0.5!")
+            abort(401)
     
     credentials = request.form.to_dict(flat=False)
     username = credentials["username"][0]

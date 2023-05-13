@@ -24,7 +24,7 @@ class CryptoFunctionalities:
         ct = encryptor.update(padded_data) + encryptor.finalize()
         return base64.b64encode(iv + ct)
     
-    def decrypt(self, key: bytes, ct: bytes):
+    def decrypt(self, key: bytes, ct: bytes) -> bytes:
         enc = base64.b64decode(ct)
         # Separate IV and data
         iv = enc[:16]
@@ -60,7 +60,7 @@ class CryptoFunctionalities:
         )
         
         try:
-            kdf.verify(psw, key)
+            kdf.verify(psw.encode(), key)
             return True
         except Exception:
             return False

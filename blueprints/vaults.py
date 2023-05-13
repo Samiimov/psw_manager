@@ -117,8 +117,12 @@ def remove_vault_post(vault_name):
     else:
         name = session.get("plaintxt_name")
         logger.info(f"Removing vault '{vault_name}' from user '{name}'")
-        vault_backup = copy.deepcopy(session["vault"][vault_name])
-        del session["vault"][vault_name]
+        try:
+            vault_backup = copy.deepcopy(session["vault"][vault_name])
+            del session["vault"][vault_name]
+        except KeyError:
+            flash("Given vault doesn't exist!", "error")
+            return redirect(url_for("vaults.vaults_get"))
         session.modified = True
         encrypted_vault = crypto.encrypt(session["key"], json.dumps(session["vault"]))
         logger.info(f"Updating vault '{vault_name}' for user '{name}'")

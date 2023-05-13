@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, session, url_for
+from flask import Flask, redirect, render_template, session, url_for, flash
 from flask_session import Session
 from flask_wtf import CSRFProtect
 from blueprints.signin import signin
@@ -12,9 +12,10 @@ import os
 import sys
 from dotenv import load_dotenv
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
     # Used for enrypting sessions
+    app.config["TESTING"] = False
     app.config["SECRET_KEY"] = os.urandom(16)
     app.config["SESSION_TYPE"] = "filesystem"
     # Logs out after 10 minutes
@@ -34,6 +35,7 @@ csrf = CSRFProtect(app)
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
+    flash("Logged out!")
     return redirect(url_for("index"))
 
 @app.route('/', methods=["GET"])
