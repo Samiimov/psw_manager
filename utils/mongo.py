@@ -1,8 +1,15 @@
 import pymongo
 from loguru import logger
-from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
+from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError, ConfigurationError, OperationFailure
 import sys
-from datetime import datetime
+import os
+import dotenv
+
+dotenv.load_dotenv()
+mongo_url = os.getenv("MONGO_URL")
+mongo_port = int(os.getenv("MONGO_PORT"))
+mongo_username = os.getenv("MONGO_USERNAME")
+mongo_psw = os.getenv("MONGO_PSW")
 
 DATABASE_NAME = "psw_manager"
 CREDENTIALS_COLLECTION = "credentials"
@@ -23,18 +30,34 @@ class MongoMethods:
         Create a connection to local mongo.
         """
         try:
-            logger.info("Trying to connect mongo at localhost:27017!")
-            conn = pymongo.MongoClient("localhost", 27017)
-            # Force connection -> error if not working
-            conn.server_info()
+            if mongo_username and mongo_psw:
+                logger.info(
+                    f"Trying to connect mongo at {mongo_url}:{mongo_port} using provided credentials!"
+                    )
+                conn = pymongo.MongoClient(mongo_url, 
+                                           mongo_port,
+                                           username=mongo_username,
+                                           password=mongo_psw)
+            else:
+                logger.info(
+                    f"Trying to connect mongo at {mongo_url}:{mongo_port} without credentials!"
+                    )
+                conn = pymongo.MongoClient(mongo_url, mongo_port)
             self.conn = conn
+            self.initialize_databases()
             logger.info("Mongo connection initialized!")
         except (ConnectionFailure, ServerSelectionTimeoutError) as e:
             logger.error(f'MongoDB seems to be down? \n {e}')
             sys.exit()
+        except ConfigurationError as e:
+            logger.error(f"Wrong mongo credentials? \n {e}")
+            sys.exit()
+        except OperationFailure as e:
+            logger.error(f"Wrong mongo credentials? \n {e}")
+            sys.exit()
         return conn
     
-    def initialize_mongo(self):
+    def initialize_databases(self):
         """
         Check mongo database and its collections. 
         Create psw_manager database if doesn't exist.
@@ -44,6 +67,9 @@ class MongoMethods:
         self.credentials_collection = self.psw_manager_database[CREDENTIALS_COLLECTION]
         self.vaults_collection = self.psw_manager_database[VAULTS_COLLECTION]
         self.salts_collection = self.psw_manager_database[SALTS_COLLECTION]
+
+        # Check that connection works
+        self.psw_manager_database.list_collections()
 
     def get_credentials(self, username: str):
         try:

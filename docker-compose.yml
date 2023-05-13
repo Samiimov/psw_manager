@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  # Database service
+  database:
+    # Use the 'mongo:latest' image
+    image: mongo:latest
+    # Expose port 27017 for MongoDB
+    ports:
+      - "27017:27017"
+    expose:
+      - '27017'
+    # Add the service to the project network
+    networks:
+      - project-network
+    environment:
+      # Default credentials for mongo
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: examplePassword123
+
+# Defines the project network
+networks:
+  project-network:
+    # Name of the network
+    name: network
+    # Use the bridge driver
+    driver: bridge

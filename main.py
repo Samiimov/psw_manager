@@ -23,6 +23,7 @@ def create_app():
     app.config["SESSION_PERMANENT"] = False
     return app
 
+# Create app and register blueprints
 sess = Session()
 app = create_app()
 app.register_blueprint(login)
@@ -43,16 +44,25 @@ def index():
         return redirect(url_for("vaults.vaults_get"))
     
 if __name__ == '__main__':
+    # Fetch the enviroment values from .env file
     load_dotenv()
-    # Fetch the value of LOG_ENCRYPTION_KEY from the environment
+    # Possible encryption key for log files
     log_encryption_key = os.getenv("LOG_ENCRYPTION_KEY")
+    # ReCaptcha variavbles
     recaptcha_secret = os.getenv("RECAPTCHA_SECRET_KEY")
     recaptcha_site_key = os.getenv("RECAPTCHA_SITE_KEY")
     recaptcha_verify_url = os.getenv("RECAPTCHA_VERIFY_URL")
-    
+    # Mongo variables
+    mongo_url = os.getenv("MONGO_URL")
+    try:
+        mongo_port = int(os.getenv("MONGO_PORT"))
+    except TypeError:
+        logger.error("Mongo port must be interger!")
+        sys.exit()
+
     # Check if the environment variable exists
     if log_encryption_key is None:
-        logger.info("LOG_ENCRYPTION_KEY is not set in the .env file.")
+        logger.warning("LOG_ENCRYPTION_KEY is not set in the .env file. Logs will not be encrypted!")
     
     # Logger
     date_time = datetime.strftime(datetime.now(), "%d_%m_%Y")
@@ -79,7 +89,14 @@ if __name__ == '__main__':
         logger.error("reCaptcha verification url was not provided. Set it in .env file with key 'RECAPTCHA_VERIFY_URL'")
         sys.exit()
 
+    # Check that mongo variables were given
+    if not mongo_url:
+        logger.error("Mongo url was not provided. Set it in .env file with key 'MONGO_URL'")
+        sys.exit()
+    if not mongo_port:
+        logger.error("Mongo port was not provided. Set it in .env file with key 'MONGO_PORT'")
+        sys.exit()
+    
     logger.info("Starting!")
     mongo_connection = mongo.create_connection()
-    mongo.initialize_mongo()
     app.run(host='localhost', port=5001, debug=True, ssl_context='adhoc')
