@@ -129,6 +129,17 @@ The are a couple of ways to setup mongo.
 2. Use an installed mongo on your computer.
     - **NOTE:** .env file stores mongo username, password, address and port. 
 
+### .env file
+**NOTE: If you are using docker-compose and environment.yml you donä't have to use this**
+The .env file contains different parameters for running the application:
+- LOG_ENCRYPTION_KEY (32 byte key) : Voluntary
+    - This variable contains an encryption key for the logger. If this is used the logger encrypts the output.
+    - By removing this you can remove logger encryption.
+- RECAPTCHA_SECRET_KEY, RECAPTCHA_SITE_KEY, RECAPTCHA_VERIFY_URL : **MANDATORY**
+    - Keys and URL for reCaptcha.
+- MONGO_URL and MONGO_PORT : **MANDATORY**
+- MONGO_USERNAME and MONGO_PSW : Voluntary
+
 ## Using and testing the application
 After setting up the environment run **python main.py** and the application is now running at https://localhost:5001.
 
@@ -139,14 +150,25 @@ Test can be run by running **coverage run -m pytest -s**
 The UI is very straight forward. 
 
 -   On the index page of localhost:5001 the user can select wether to log in or sign in.  
+
     ![Index](./images/index.png)
+
 -   On the sing in page the user can input username and password. If the sing in is successful the user is redirected to index page and otherwise they are notified with a red box.
+
     ![Index](./images/singin_error.png)
+
 -   On the log in page the user can login. The user is redirected to vaults page if the login is successful. Otherwise they are notified with a red box.
+
     ![Index](./images/login.png)
+
 -   On the vaults page the user can see their existing vault and create new ones.
+
     ![Index](./images/login_ok.png)
+
 -   On the vault creation page the user can create new vaults. If the vault is created succesfully the user is redirected to vaults page. Otherwise they are notified with a red box.
+
     ![Index](./images/vault_creation.png)
+    
 -   By clicking a vault the user can create new items inside a vault as well as modifiy and deleted them. The user can also delete the whole vault from this page. When perfrorming actions the user is notified of the action's result accordingly.
+
     ![Index](./images/items.png)
