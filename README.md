@@ -153,7 +153,7 @@ Automated test have been implemented for following functionalities:
 - Password validation
 - Cryptographic functionalities
 
-These tests cover everything the application does. Test files are name accordingly.
+These tests cover everything the application does. Test files are name accordingly and documented.
 
 **NOTE: CSRF tokens are disabled in testing mode**
 
