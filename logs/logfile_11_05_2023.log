@@ -1,0 +1,38 @@
+2023-05-11 06:58:20.246 | INFO     | __main__:<module>:68 - Starting!
+2023-05-11 06:58:20.247 | INFO     | mongo:create_connection:26 - Trying to connect mongo at localhost:27017!
+2023-05-11 06:58:20.255 | INFO     | mongo:create_connection:31 - Mongo connection initialized!
+2023-05-11 06:58:20.778 | INFO     | __main__:<module>:68 - Starting!
+2023-05-11 06:58:20.779 | INFO     | mongo:create_connection:26 - Trying to connect mongo at localhost:27017!
+2023-05-11 06:58:20.786 | INFO     | mongo:create_connection:31 - Mongo connection initialized!
+2023-05-11 06:59:10.802 | INFO     | __main__:<module>:67 - Starting!
+2023-05-11 06:59:10.803 | INFO     | mongo:create_connection:26 - Trying to connect mongo at localhost:27017!
+2023-05-11 06:59:10.821 | INFO     | mongo:create_connection:31 - Mongo connection initialized!
+2023-05-11 06:59:43.398 | INFO     | blueprints.signin:signin_post:33 - Trying to create user 'Username1'!
+2023-05-11 06:59:43.401 | INFO     | blueprints.signin:signin_post:63 - Creating user 'Username1'!
+2023-05-11 06:59:43.402 | INFO     | blueprints.signin:signin_post:66 - Adding user 'Username1' to mongo!
+2023-05-11 06:59:43.404 | INFO     | blueprints.signin:signin_post:75 - Adding salt for user 'Username1' to mongo!
+2023-05-11 06:59:43.712 | INFO     | blueprints.signin:signin_post:85 - Adding vault for user 'Username1' to mongo!
+2023-05-11 06:59:43.714 | INFO     | blueprints.signin:signin_post:92 - User 'Username1' created successfully!
+2023-05-11 06:59:55.962 | INFO     | blueprints.login:login_post:25 - User 'Username1 tries to log in!'
+2023-05-11 06:59:55.963 | INFO     | blueprints.login:login_post:27 - Fetching username 'Username1' from mongo
+2023-05-11 06:59:55.965 | INFO     | blueprints.login:login_post:39 - User 'Username1' provided right credentials!
+2023-05-11 06:59:55.965 | INFO     | blueprints.login:login_post:45 - Fetching vaults for user 'Username1'
+2023-05-11 06:59:55.967 | INFO     | blueprints.login:login_post:53 - Fetching salt for user 'Username1'
+2023-05-11 06:59:56.288 | INFO     | blueprints.login:login_post:72 - User 'Username1' has logged in!
+2023-05-11 07:00:03.427 | INFO     | blueprints.vaults:create_vault_post:44 - User 'Username1' tries to create vault 'TestiVault'
+2023-05-11 07:00:03.428 | INFO     | blueprints.vaults:create_vault_post:56 - Creating vault 'TestiVault' from user 'Username1' in mongo
+2023-05-11 07:00:03.430 | INFO     | blueprints.vaults:create_vault_post:62 - Vault 'TestiVault' created for user 'Username1'
+2023-05-11 07:00:05.204 | INFO     | blueprints.vaults:open_vault:26 - User 'Username1' opened vault 'TestiVault'
+2023-05-11 07:00:22.722 | INFO     | blueprints.vaults:update_vault_post:73 - Updating vault 'TestiVault' from user 'Username1'
+2023-05-11 07:00:22.723 | INFO     | blueprints.vaults:update_vault_post:100 - Updating vault 'TestiVault' from user 'Username1' in mongo!
+2023-05-11 07:00:22.725 | INFO     | blueprints.vaults:update_vault_post:107 - Updated vault 'TestiVault' from user 'Username1'
+2023-05-11 07:00:23.334 | INFO     | blueprints.vaults:open_vault:26 - User 'Username1' opened vault 'TestiVault'
+2023-05-11 07:00:30.378 | INFO     | blueprints.vaults:open_vault:26 - User 'Username1' opened vault 'TestiVault'
+2023-05-11 07:00:34.734 | INFO     | blueprints.vaults:remove_vault_post:120 - Removing vault 'TestiVault' from user 'Username1'
+2023-05-11 07:00:34.737 | INFO     | blueprints.vaults:remove_vault_post:132 - Removed vault 'TestiVault' from user 'Username1'
+2023-05-11 07:06:38.966 | INFO     | __main__:<module>:67 - Starting!
+2023-05-11 07:06:38.966 | INFO     | mongo:create_connection:26 - Trying to connect mongo at localhost:27017!
+2023-05-11 07:06:38.984 | INFO     | mongo:create_connection:31 - Mongo connection initialized!
+2023-05-11 07:06:39.644 | INFO     | __main__:<module>:67 - Starting!
+2023-05-11 07:06:39.645 | INFO     | mongo:create_connection:26 - Trying to connect mongo at localhost:27017!
+2023-05-11 07:06:39.662 | INFO     | mongo:create_connection:31 - Mongo connection initialized!

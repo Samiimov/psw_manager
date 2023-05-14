@@ -3,6 +3,9 @@ import main
 
 @pytest.fixture(scope='session')
 def app():
+    """
+    Fixture for setting up mongo test databases and changing Flask app config for testing.
+    """
     main.mongo.create_connection()
     main.mongo.create_connection()
     # Change mongo collections
@@ -19,11 +22,11 @@ def app():
     client = main.app.test_client()
     return client
 
-def test_login_get(app):
-    response = app.get('/login')
-    assert response.status_code == 200
-
 def test_vault_creation_post_success(app):
+    """
+    Test vault creation with a valid vault name
+    """
+    # Need to create an user
     response = app.post("/signin", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -31,17 +34,22 @@ def test_vault_creation_post_success(app):
 
     assert "User was created successfully!" in response.text
 
+    # Login with user -> creates a session.
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
     }, follow_redirects=True)
     
+    # Create vault
     response = app.post("/create_vault", data={
         "Name": "TestVault"
     }, follow_redirects=True)
     assert "Vault created sucessfully" in response.text
 
 def test_vault_creation_post_already_exists(app):
+    """
+    Test creating a vault that already exists.
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -53,6 +61,9 @@ def test_vault_creation_post_already_exists(app):
     assert "already exists!" in response.text
 
 def test_vault_creation_post_cant_be_empty(app):
+    """
+    Test creating a vault with invalid name
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -64,6 +75,9 @@ def test_vault_creation_post_cant_be_empty(app):
     assert " be empty or end in space!" in response.text
 
 def test_update_vault_post_success(app):
+    """
+    Test updating vault with a valid password
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -76,6 +90,9 @@ def test_update_vault_post_success(app):
     assert "Items saved succesfully!" in response.text
 
 def test_update_vault_post_fail_to_update(app):
+    """
+    Test updating the vault with an invalid password
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -89,6 +106,9 @@ def test_update_vault_post_fail_to_update(app):
     assert "Password is too short!" in response.text and "Other items saved successfully" in response.text
 
 def test_remove_vault_success(app):
+    """
+    Test removing a vault
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"
@@ -98,6 +118,9 @@ def test_remove_vault_success(app):
     assert "Vault removed succesfully!" in response.text
 
 def test_remove_vault_vault_doent_exist(app):
+    """
+    Test removing a vault that doesn't exist
+    """
     response = app.post("/login", data={
         "username": "testi2323A!!",
         "password": "testi2323A!!"

@@ -3,6 +3,9 @@ import os
 import base64
 
 def test_key_derivation():
+    """
+    Test key derivation function.
+    """
     salt = os.urandom(16)
     test_key_for_key_derivation = "TestKeyThisOneIs"
     key = crypto.derive_key(test_key_for_key_derivation,
@@ -13,6 +16,9 @@ def test_key_derivation():
     assert verify == True
 
 def test_encryption_and_decryption():
+    """
+    Test encryption and decryption.
+    """
     salt = os.urandom(16)
     test_data = "ThisIsATestString"
     test_key_for_key_derivation = "TestKeyThisOneIs"
