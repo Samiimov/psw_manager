@@ -57,26 +57,43 @@ OWASP Top 10 list provided a checklist for programming solutions. Here are point
         - Logger is initialized in main.py. If an encryption key is provided in the .env file the log files are encrypted.
         - Log filename is **logfile_dd_mm_yyyy.log** or **logfile_dd_mm_yyyy_encrypted.log**
         - Logger initializion:
+
         ![Logger creation](./images/logger.png)
+
         - Logger formatter for encryption:
+
         ![Log formatter](./images/logger_formatter.png)
+
         - Logger is used with for example **logger.info("This text is logged!")**
 2. [Cryptographic failures](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/)
     - HTTPS is used with self-signed certificates.  
         - Self-signed certificate and HTTPS connection is initialized in main.py.
         - ssl_context="adhoc" creates certificate and enables HTTPS connection
+
         ![Log formatter](./images/https.png)
+
     - No deprecated cryptographic algorithms.
         - Used algorithms:
             - PBKDF2
+
+            ![PBKDF2](./images/PBKDF.png)
+
             - AES256 in CBC mode 
+
+            ![AES](./images/aes.png)
+
             - SHA256 is used for hashing.
+
+            ![AES](./images/hash.png)
+
     - Randomness is cryptographically safe.
         - [os.urandom()](https://docs.python.org/3/library/os.html#os.urandom) fucntion is used to create randomness.
             
     - No keys in the source code.
     - All data is stored encrypted and keys are stored as byte arrays.
+
     ![Mongo view](./images/mongo_creds.png)
+
 3. [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)
     - System was developed with Python 3.11.
     - All used cryptography libraries are considered safe libraries. 
