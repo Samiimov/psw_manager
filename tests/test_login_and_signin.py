@@ -16,7 +16,9 @@ def app():
     main.mongo.vaults_collection.delete_many({})
     main.mongo.salts_collection.delete_many({})
     app_ = main.app
+    # Enable testin flag in app configuration
     app_.config["TESTING"] = True
+    # Disable CSRF token validation
     app_.config['WTF_CSRF_METHODS'] = []
     client = main.app.test_client()
     return client

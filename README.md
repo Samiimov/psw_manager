@@ -53,14 +53,30 @@ OWASP Top 10 list provided a checklist for programming solutions. Here are point
     - System logging is impelmented. Every POST method functionality is thoroughly logged.
         - All database queries are also logged.
     - Voluntary encryption is implemented for the log files. 
-
+    - Code:
+        - Logger is initialized in main.py. If an encryption key is provided in the .env file the log files are encrypted.
+        - Log filename is **logfile_dd_mm_yyyy.log** or **logfile_dd_mm_yyyy_encrypted.log**
+        - Logger initializion:
+        ![Logger creation](./images/logger.png)
+        - Logger formatter for encryption:
+        ![Log formatter](./images/logger_formatter.png)
+        - Logger is used with for example **logger.info("This text is logged!")**
 2. [Cryptographic failures](https://owasp.org/Top10/A02_2021-Cryptographic_Failures/)
-    - HTTPS is used with self-signed certificates. 
+    - HTTPS is used with self-signed certificates.  
+        - Self-signed certificate and HTTPS connection is initialized in main.py.
+        - ssl_context="adhoc" creates certificate and enables HTTPS connection
+        ![Log formatter](./images/https.png)
     - No deprecated cryptographic algorithms.
+        - Used algorithms:
+            - PBKDF2
+            - AES256 in CBC mode 
+            - SHA256 is used for hashing.
     - Randomness is cryptographically safe.
+        - [os.urandom()](https://docs.python.org/3/library/os.html#os.urandom) fucntion is used to create randomness.
+            
     - No keys in the source code.
     - All data is stored encrypted and keys are stored as byte arrays.
-
+    ![Mongo view](./images/mongo_creds.png)
 3. [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)
     - System was developed with Python 3.11.
     - All used cryptography libraries are considered safe libraries. 
@@ -74,23 +90,38 @@ OWASP Top 10 list provided a checklist for programming solutions. Here are point
 
 1. CSRF prevention
     - This is implemented using Flask CSRF library. All POST methods require a valid CSRF token.
-
+        - CSRF protection is initialized at **csrf = CSRFProtect(app)** in the picture below.
+        - CSRF token is generated in HTML forms with **{{ csrf_token() }}**.
+        - CSRF library automatically handles CSRF tokens.
 2. Sessions
     - Stored and encrypted server-side. Client only has session key.
+        - Key for encryption sessions data is generated in the picture below at:
+            - **app.config["SECRET_KEY"] = os.urandom(16)**
     - Max length is set to 30 mins.
+        - **app.config["PERMANENT_SESSIONS_LIFETIME"]** in the picture below.
     - Session is deleted when browser is closed.
+        - **app.config["SESSIONS_PERMANENT"]** in the picture below.
+
+![App creation](./images/app_creation.png)
 
 3. Brute-force attack prevention
     - ReCaptcha v3.0 is used to prevent brute-force attacks and bots.
+        - ReCaptcha is enabled in the HTML files using buttons shown below.
+        
+        ![App creation](./images/recaptcha.png)
 
-4. Mongo credentials
+        - ReCaptcha is validated in login and sign in form with the code below.
+
+        ![App creation](./images/recaptcha_verify.png)
+
+4. User is able to define mongo credentials
     - This depend on the user but it is possible to set mongo credentials.
-
+    - Setting mongo creadentials is explained below at how to setup enviroment section.
 ## Testing
 
 ### Manual testing
 During the development extensive manual testing was done. Manually tested things were:
-1. CSRF libarary
+1. CSRF library
 2. User sign in, login (in and out).
     - Invalid passwords and usernames were tested multiple times.
 3. Vault creation and deletion.
@@ -106,6 +137,8 @@ Automated test have been implemented for following functionalities:
 - Cryptographic functionalities
 
 These tests cover everything the application does. Test files are name accordingly.
+
+**NOTE: CSRF tokens are disabled in testing mode**
 
 ## How to setup environment
 
@@ -168,7 +201,7 @@ The UI is very straight forward.
 -   On the vault creation page the user can create new vaults. If the vault is created succesfully the user is redirected to vaults page. Otherwise they are notified with a red box.
 
     ![Index](./images/vault_creation.png)
-    
+
 -   By clicking a vault the user can create new items inside a vault as well as modifiy and deleted them. The user can also delete the whole vault from this page. When perfrorming actions the user is notified of the action's result accordingly.
 
     ![Index](./images/items.png)
