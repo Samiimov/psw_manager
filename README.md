@@ -180,7 +180,8 @@ The are a couple of ways to setup mongo.
     - **NOTE:** .env file stores mongo username, password, address and port. 
 
 ### .env file
-**NOTE: If you are using docker-compose and environment.yml you donä't have to use this**
+**NOTE: If you are using docker-compose and environment.yml you don't have to use this.**
+
 The .env file contains different parameters for running the application:
 - LOG_ENCRYPTION_KEY (32 byte key) : Voluntary
     - This variable contains an encryption key for the logger. If this is used the logger encrypts the output.
