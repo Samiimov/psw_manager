@@ -89,7 +89,7 @@ OWASP Top 10 list provided a checklist for programming solutions. Here are point
     - Randomness is cryptographically safe.
         - [os.urandom()](https://docs.python.org/3/library/os.html#os.urandom) fucntion is used to create randomness.
             
-    - No keys in the source code.
+    - No keys in the source code. ReCaptcha key wouldn't be in the repository unless it was needed for testing by course personnel.
     - All data is stored encrypted and keys are stored as byte arrays.
 
     ![Mongo view](./images/mongo_creds.png)
